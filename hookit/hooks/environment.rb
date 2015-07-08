@@ -6,6 +6,6 @@ host = `ifconfig eth0`.match(/inet addr:(\d+\.\d+\.\d+\.\d+)/)[1]
 puts <<-EOF
 {
   "HOST": "#{host}",
-  "PORT": "2049",
+  "PORT": "2049"
 }
 EOF
