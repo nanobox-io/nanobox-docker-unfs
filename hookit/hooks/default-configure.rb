@@ -66,3 +66,21 @@ export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/
 exec /opt/gonano/bin/narcd /opt/gonano/etc/narc.conf
   EOF
 end
+
+# Setup root keys for data migrations
+directory '/root/.ssh' do
+  recursive true
+end
+
+file '/root/.ssh/id_rsa' do
+  content payload[:ssh][:admin_key][:private_key]
+  mode 0600
+end
+
+file '/root/.ssh/id_rsa.pub' do
+  content payload[:ssh][:admin_key][:public_key]
+end
+
+file '/root/.ssh/authorized_keys' do
+  content payload[:ssh][:admin_key][:public_key]
+end
