@@ -4,5 +4,5 @@ execute "bring down vip" do
 end 
 
 execute "remove persistance" do
-  command "rm /etc/network/interfaces.d/eth00"
+  command "rm -f /etc/nanoinit.d/eth00"
 end
