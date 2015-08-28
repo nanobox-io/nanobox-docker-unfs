@@ -25,8 +25,14 @@ Vagrant.configure(2) do |config|
   # Build image
   config.vm.provision "shell", inline: "docker build -t #{ENV['docker_user']}/nfs /vagrant"
 
+  # Tag built images
+  config.vm.provision "shell", inline: "docker tag #{ENV['docker_user']}/nfs #{ENV['docker_user']}/nfs:0.9"
+  config.vm.provision "shell", inline: "docker tag #{ENV['docker_user']}/nfs #{ENV['docker_user']}/nfs:0.9-stable"
+
   # Publish image to dockerhub
   config.vm.provision "shell", inline: "docker push #{ENV['docker_user']}/nfs"
+  config.vm.provision "shell", inline: "docker push #{ENV['docker_user']}/nfs:0.9"
+  config.vm.provision "shell", inline: "docker push #{ENV['docker_user']}/nfs:0.9-stable"
 
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "768"]
