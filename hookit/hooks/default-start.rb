@@ -1,2 +1,10 @@
-# convert to 'runit' init-type hookit 'service'
-execute 'sv start storage'
+
+service 'storage' do
+  action :enable
+  init :runit
+end
+
+ensure_socket 'storage' do
+  port '2049'
+  action :listening
+end
