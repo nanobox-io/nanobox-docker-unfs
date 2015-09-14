@@ -1,2 +1,5 @@
-# convert to 'runit' init-type hookit 'service'
-execute 'sv stop storage'
+
+service 'storage' do
+  action :disable
+  init :runit
+end
