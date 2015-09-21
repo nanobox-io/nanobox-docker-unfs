@@ -52,7 +52,7 @@ end
 
 # Configure narc
 template '/opt/gonano/etc/narc.conf' do
-  variables ({ uid: payload[:uid], app: "nanobox", logtap: payload[:logtap_uri] })
+  variables ({ uid: payload[:uid], app: "nanobox", logtap: payload[:logtap_host] })
 end
 
 directory '/etc/service/narc'
@@ -65,4 +65,26 @@ export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/
 
 exec /opt/gonano/bin/narcd /opt/gonano/etc/narc.conf
   EOF
+end
+
+if payload[:platform] != 'local'
+
+  # Setup root keys for data migrations
+  directory '/root/.ssh' do
+    recursive true
+  end
+
+  file '/root/.ssh/id_rsa' do
+    content payload[:ssh][:admin_key][:private_key]
+    mode 0600
+  end
+
+  file '/root/.ssh/id_rsa.pub' do
+    content payload[:ssh][:admin_key][:public_key]
+  end
+
+  file '/root/.ssh/authorized_keys' do
+    content payload[:ssh][:admin_key][:public_key]
+  end
+
 end

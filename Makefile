@@ -1,18 +1,33 @@
-all: image
+all: image tag
 
 image:
-ifdef docker_user
-	vagrant up
-else
-	export docker_user='nanobox' && vagrant up
-endif
+	@vagrant up
+	@vagrant ssh -c "sudo docker build -t nanobox/nfs /vagrant"
 
-publish:
-ifdef docker_user
-	vagrant provision
-else
-	export docker_user='nanobox' && vagrant provision
-endif
+tag:
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9"
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9-stable"
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9-beta"
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9-alpha"
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:stable"
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:beta"
+	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:alpha"
+
+publish: push_09_stable
+
+push_09_stable: push_09_beta
+	@vagrant ssh -c "sudo docker push nanobox/nfs"
+	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9"
+	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9-stable"
+	@vagrant ssh -c "sudo docker push nanobox/nfs:stable"
+
+push_09_beta: push_09_alpha
+	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9-beta"
+	@vagrant ssh -c "sudo docker push nanobox/nfs:beta"
+
+push_09_alpha:
+	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9-alpha"
+	@vagrant ssh -c "sudo docker push nanobox/nfs:alpha"
 
 clean:
-	vagrant destroy -f
+	@vagrant destroy -f
