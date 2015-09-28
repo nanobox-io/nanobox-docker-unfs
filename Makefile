@@ -1,33 +1,30 @@
-all: image tag
+# -*- mode: make; tab-width: 4; -*-
+# vim: ts=4 sw=4 ft=make noet
+all: build publish
 
-image:
-	@vagrant up
-	@vagrant ssh -c "sudo docker build -t nanobox/nfs /vagrant"
+LATEST:=0.9
+stability?=latest
+version?=$(LATEST)
+dockerfile?=Dockerfile-$(version)
 
-tag:
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9"
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9-stable"
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9-beta"
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:0.9-alpha"
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:stable"
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:beta"
-	@vagrant ssh -c "sudo docker tag -f nanobox/nfs nanobox/nfs:alpha"
+login:
+	@vagrant ssh -c "docker login"
 
-publish: push_09_stable
+build:
+	@echo "Building 'nfs' image..."
+	@vagrant ssh -c "docker build -f /vagrant/Dockerfile-${version} -t nanobox/nfs /vagrant"
 
-push_09_stable: push_09_beta
-	@vagrant ssh -c "sudo docker push nanobox/nfs"
-	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9"
-	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9-stable"
-	@vagrant ssh -c "sudo docker push nanobox/nfs:stable"
-
-push_09_beta: push_09_alpha
-	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9-beta"
-	@vagrant ssh -c "sudo docker push nanobox/nfs:beta"
-
-push_09_alpha:
-	@vagrant ssh -c "sudo docker push nanobox/nfs:0.9-alpha"
-	@vagrant ssh -c "sudo docker push nanobox/nfs:alpha"
+publish:
+	@echo "Tagging 'nfs:${version}-${stability}' image..."
+	@vagrant ssh -c "docker tag -f nanobox/nfs nanobox/nfs:${version}-${stability}"
+	@echo "Publishing 'nfs:${version}-${stability}'..."
+	@vagrant ssh -c "docker push nanobox/nfs:${version}-${stability}"
+ifeq ($(version),$(LATEST))
+	@echo "Publishing 'nfs:${stability}'..."
+	@vagrant ssh -c "docker tag -f nanobox/nfs nanobox/nfs:${stability}"
+	@vagrant ssh -c "docker push nanobox/nfs:${stability}"
+endif
 
 clean:
-	@vagrant destroy -f
+	@echo "Removing all images..."
+	@vagrant ssh -c "for image in \$$(docker images -q); do docker rmi -f \$$image; done"
