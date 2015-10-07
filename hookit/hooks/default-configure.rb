@@ -1,9 +1,11 @@
 
-directory '/datas'
+directory '/data/var/db/nfs' do
+  recursive true
+end
 
-# chown datas for gonano
-execute 'chown /datas' do
-  command 'chown -R gonano:gonano /datas'
+# chown /data/var/db/nfs for gonano
+execute 'chown /data/var/db/nfs' do
+  command 'chown -R gonano:gonano /data/var/db/nfs'
 end
 
 file '/data/etc/exports' do
@@ -11,7 +13,7 @@ file '/data/etc/exports' do
   owner 'gonano'
   group 'gonano'
   content <<-EOF
-/datas 0.0.0.0/0(rw,no_root_squash,insecure)
+/data/var/db/nfs 0.0.0.0/0(rw,no_root_squash,insecure)
   EOF
 end
 
