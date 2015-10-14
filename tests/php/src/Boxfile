@@ -1,6 +1,0 @@
-web1:
-  name: web
-  network_dirs:
-    nfs1:
-      - writable
-      - test2.txt
