@@ -5,10 +5,6 @@ FROM nanobox/runit
 # Create directories
 RUN mkdir -p /var/log/gonano
 
-# Copy files
-ADD hookit/. /opt/gonano/hookit/mod/
-ADD files/. /
-
 # TEMP
 RUN apt-get update -qq && \
     apt-get install -y rpcbind nfs-common && \
@@ -22,6 +18,13 @@ RUN rm -rf /data/var/db/pkgin && \
         unfs3 \
         flex && \
     rm -rf /data/var/db/pkgin/cache
+
+# Install hooks
+RUN rm -rf /var/gonano/db/pkgin && \
+    /opt/gonano/bin/pkgin -y up && \
+    /opt/gonano/bin/pkgin -y in \
+        hooks-unfs && \
+    rm -rf /var/gonano/db/pkgin/cache
 
 # Cleanup disk
 RUN rm -rf \
