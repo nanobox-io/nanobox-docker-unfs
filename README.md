@@ -1,6 +1,6 @@
-## nanobox-docker-nfs ![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-nfs.svg)
+## nanobox-docker-unfs ![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-unfs.svg)
 
-This repo contains the files necessary to create the nfs docker image for [Nanobox](http://nanobox.io) consumption.
+This repo contains the files necessary to create the unfs docker image for [Nanobox](http://nanobox.io) consumption.
 
 ## Testing
 
