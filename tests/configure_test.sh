@@ -1,10 +1,10 @@
 VERSION=$1
-echo running tests for $VERSION of nfs
+echo running tests for $VERSION of unfs
 UUID=$(cat /proc/sys/kernel/random/uuid)
 PAYLOAD='{"boxfile":{"name":"storage1","stability":"stable","version":'${VERSION}'},"logtap_host":"127.0.0.1","platform":"local","uid":"unfs1"}'
 echo boxfile: "$PAYLOAD"
 
-pass "unable to start the $VERSION container" docker run --privileged=true -d --name $UUID nanobox/nfs:$VERSION
+pass "unable to start the $VERSION container" docker run --privileged=true -d --name $UUID nanobox/unfs:$VERSION
 defer docker kill $UUID
 
 # we should be able to run the basic update hook
