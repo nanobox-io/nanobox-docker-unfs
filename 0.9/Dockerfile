@@ -23,6 +23,12 @@ RUN rm -rf /data/var/db/pkgin && \
         flex && \
     rm -rf /data/var/db/pkgin/cache
 
+RUN rm -rf /var/gonano/db/pkgin && \
+    /opt/gonano/bin/pkgin -y up && \
+    /opt/gonano/bin/pkgin -y in \
+        rsync && \
+    rm -rf /var/gonano/db/pkgin/cache
+
 # Cleanup disk
 RUN rm -rf \
         /var/lib/apt/lists/* \
@@ -30,4 +36,4 @@ RUN rm -rf \
         /var/tmp/*
 
 # Run runit automatically
-CMD /opt/gonano/bin/nanoinit
+CMD [ "/opt/gonano/bin/nanoinit" ]
