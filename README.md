@@ -9,7 +9,7 @@ data:
 
 ## UNFS Configuration Options
 
-There are no configuration options unique to UNFS services, but they work in conjunction with network directories. These are covered in detail in the [Nanobox Network Storage documentation](https://docs.nanobox.io/app-config/network-storage/).
+There are no configuration options for UNFS services, but they work in conjunction with network directories. These are covered in detail in the [Nanobox Network Storage documentation](https://docs.nanobox.io/app-config/network-storage/).
 
 #### Example boxfile.yml with UNFS
 ```yaml
