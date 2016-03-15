@@ -9,4 +9,4 @@ services:
 before_install:
   - docker build -t nanobox/nfs:$VERSION ./$VERSION
 
-script: sudo tests/run.sh $VERSION
+script: sudo test/run_all.sh $VERSION
