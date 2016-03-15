@@ -6,7 +6,6 @@ FROM nanobox/runit
 RUN mkdir -p /var/log/gonano
 
 # Copy files
-ADD hookit/. /opt/gonano/hookit/mod/
 ADD files/. /
 
 # TEMP
@@ -28,6 +27,19 @@ RUN rm -rf /var/gonano/db/pkgin && \
     /opt/gonano/bin/pkgin -y in \
         rsync && \
     rm -rf /var/gonano/db/pkgin/cache
+
+# Install hooks
+RUN mkdir -p /opt/nanobox/hooks && \
+    curl \
+      -f \
+      -k \
+      https://s3.amazonaws.com/tools.nanobox.io/hooks/unfs-stable.tgz \
+        | tar -xz -C /opt/nanobox/hooks && \
+    curl \
+      -f \
+      -k \
+      -o /opt/nanobox/unfs-stable.md5 \
+      https://s3.amazonaws.com/tools.nanobox.io/hooks/unfs-stable.md5
 
 # Cleanup disk
 RUN rm -rf \
