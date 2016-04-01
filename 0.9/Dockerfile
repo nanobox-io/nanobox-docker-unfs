@@ -5,9 +5,6 @@ FROM nanobox/runit
 # Create directories
 RUN mkdir -p /var/log/gonano
 
-# Copy files
-ADD files/. /
-
 # TEMP
 RUN apt-get update -qq && \
     apt-get install -y rpcbind nfs-common && \
@@ -30,6 +27,7 @@ RUN rm -rf /var/gonano/db/pkgin && \
 
 # Install hooks
 RUN mkdir -p /opt/nanobox/hooks && \
+    mkdir -p /var/nanobox && \
     curl \
       -f \
       -k \
@@ -38,7 +36,7 @@ RUN mkdir -p /opt/nanobox/hooks && \
     curl \
       -f \
       -k \
-      -o /opt/nanobox/unfs-stable.md5 \
+      -o /var/nanobox/hooks.md5 \
       https://s3.amazonaws.com/tools.nanobox.io/hooks/unfs-stable.md5
 
 # Cleanup disk
