@@ -14,7 +14,7 @@ script: sudo test/run_all.sh $VERSION
 after_success:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  - docker build -t ${NAMESPACE}/unfs ./${VERSION}
+  - docker build -t ${NAMESPACE}/unfs ./${VERSION};
   - docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION}-beta;
   - docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION}-beta;
   - if [ "$VERSION" == "0.9" ]; then
@@ -24,7 +24,7 @@ after_success:
   - if [ "$BRANCH" == "master" ]; then
     if [ "$VERSION" == "0.9" ]; then
     docker push ${REMOTE}${NAMESPACE}/unfs;
-    fi
+    fi;
     docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION};
     docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION};
     else
