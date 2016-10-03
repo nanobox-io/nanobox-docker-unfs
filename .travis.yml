@@ -13,18 +13,23 @@ script: sudo test/run_all.sh $VERSION
 
 after_success:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - "echo \"Branch: '$BRANCH'; Version: '$VERSION'\";"
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - docker build -t ${NAMESPACE}/unfs ./${VERSION};
+  # `$VERSION-beta` tag is always pushed (master or any dev branch)
   - docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION}-beta;
   - docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION}-beta;
+  # `beta` tag is always pushed (master or any dev branch)
   - if [ "$VERSION" == "0.9" ]; then
     docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:beta;
+    docker push ${REMOTE}${NAMESPACE}/unfs:beta;
+    fi
+  # `latest` tag is only pushed on master && most recent version
+  - if [ "$BRANCH" == "master" ] && [ "$VERSION" == "0.9" ]; then
     docker push ${REMOTE}${NAMESPACE}/unfs;
     fi
+  # `$VERSION` (latest/stable implied) tag is only pushed on master. tag branch for clarity otherwise (`$VERSION-$BRANCH`)
   - if [ "$BRANCH" == "master" ]; then
-    if [ "$VERSION" == "0.9" ]; then
-    docker push ${REMOTE}${NAMESPACE}/unfs;
-    fi;
     docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION};
     docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION};
     else
