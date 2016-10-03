@@ -10,3 +10,24 @@ before_install:
   - docker build -t nanobox/unfs:$VERSION ./$VERSION
 
 script: sudo test/run_all.sh $VERSION
+
+after_success:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker build -t ${NAMESPACE}/unfs ./${VERSION}
+  - docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION}-beta;
+  - docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION}-beta;
+  - if [ "$VERSION" == "0.9" ]; then
+    docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:beta;
+    docker push ${REMOTE}${NAMESPACE}/unfs;
+    fi
+  - if [ "$BRANCH" == "master" ]; then
+    if [ "$VERSION" == "0.9" ]; then
+    docker push ${REMOTE}${NAMESPACE}/unfs;
+    fi
+    docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION};
+    docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION};
+    else
+    docker tag ${NAMESPACE}/unfs ${NAMESPACE}/unfs:${VERSION}-${BRANCH//\//_};
+    docker push ${REMOTE}${NAMESPACE}/unfs:${VERSION}-${BRANCH//\//_};
+    fi
