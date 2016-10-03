@@ -1,4 +1,4 @@
-# UNFS (User-Space Network File System) ![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-unfs.svg)
+# UNFS (User-Space Network File System) [![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-unfs.svg)](https://travis-ci.org/nanobox-io/nanobox-docker-unfs)
 
 This is an UNFS Docker image used to launch a UNFS service on Nanobox. To use this image, add a data component to your `boxfile.yml` with the `nanobox/unfs` image specified:
 
