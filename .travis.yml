@@ -29,6 +29,7 @@ after_success:
     fi
   # `latest` tag is only pushed on master && most recent version
   - if [ "$BRANCH" == "master" ] && [ "$VERSION" == "0.9" ]; then
+    docker tag ${NAMESPACE}/unfs:squashed ${NAMESPACE}/unfs;
     docker push ${REMOTE}${NAMESPACE}/unfs;
     fi
   # `$VERSION` (latest/stable implied) tag is only pushed on master. tag branch for clarity otherwise (`$VERSION-$BRANCH`)
