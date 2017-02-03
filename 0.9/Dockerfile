@@ -7,7 +7,7 @@ RUN mkdir -p /var/log/gonano
 
 # TEMP
 RUN apt-get update -qq && \
-    apt-get install -y rpcbind nfs-common iputils-arping && \
+    apt-get install -y rpcbind nfs-common iputils-arping cron && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
 
