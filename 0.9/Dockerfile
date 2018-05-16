@@ -53,7 +53,7 @@ RUN rm -rf \
         /tmp/* \
         /var/tmp/*
 
-WORKDIR /data
+WORKDIR /app
 
 # Run runit automatically
 CMD [ "/opt/gonano/bin/nanoinit" ]
